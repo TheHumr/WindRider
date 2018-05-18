@@ -54,7 +54,7 @@ public class SegmentsLoadService extends IntentService {
             public void onResponse(Call<List<Segment>> call, Response<List<Segment>> response) {
                 if (response.body() != null) {
                     for (Segment segment : response.body()) {
-                        segment.save();
+                        fetchSegment(segment);
                     }
                     state = State.LOAD_SUCCESS;
                 } else {
@@ -64,6 +64,28 @@ public class SegmentsLoadService extends IntentService {
 
             @Override
             public void onFailure(Call<List<Segment>> call, Throwable t) {
+                state = State.LOAD_FAILURE;
+            }
+        });
+    }
+
+    private void fetchSegment(Segment segment) {
+        Call<Segment> segmentCall = RestClient.getStravaService().getSegment(segment.getId(), StravaAuthenticateActivity.getStravaAccessToken(getApplicationContext()));
+
+        segmentCall.enqueue(new Callback<Segment>() {
+            @Override
+            public void onResponse(Call<Segment> call, Response<Segment> response) {
+                if (response.body() != null) {
+                    Segment downloadedSegment = response.body();
+                    downloadedSegment.save();
+                    state = State.LOAD_SUCCESS;
+                } else {
+                    state = State.LOAD_SUCCESS_EMPTY;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Segment> call, Throwable t) {
                 state = State.LOAD_FAILURE;
             }
         });

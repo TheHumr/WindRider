@@ -7,6 +7,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 import static com.example.thehumr.windrider.network.RestClient.ACCESS_TOKEN;
@@ -17,7 +18,11 @@ import static com.example.thehumr.windrider.network.RestClient.ACCESS_TOKEN;
 
 public interface StravaService {
 
+    public static final String ENDPOINT_segment = "segments";
     public static final String ENDPOINT_starredSegments = "segments/starred";
+
+    @GET(ENDPOINT_segment + "/{id}")
+    Call<Segment> getSegment(@Path(value = "id") int id, @Query(ACCESS_TOKEN) String token);
 
     @GET(ENDPOINT_starredSegments)
     Call<List<Segment>> getStarredSegments(@Query(ACCESS_TOKEN) String token);
