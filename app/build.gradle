@@ -35,6 +35,17 @@ dependencies {
     // use kapt for kotlin apt
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
+
+    //Retrofit Dependencies
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+
     compile 'com.samsandberg.stravaauthenticator:strava-authenticator-android:2.0.0'
+
+    implementation 'org.greenrobot:eventbus:3.0.0'
+
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
 
 }

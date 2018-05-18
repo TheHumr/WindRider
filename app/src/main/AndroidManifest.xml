@@ -28,6 +28,7 @@
             android:name=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <service android:name=".service.SegmentsLoadService"/>
     </application>
 
 </manifest>
