@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import com.example.thehumr.windrider.app.MyApplication;
+import com.example.thehumr.windrider.database.dao.SegmentDAO;
 import com.example.thehumr.windrider.database.dto.SegmentContainer;
 import com.example.thehumr.windrider.database.table.Segment;
 import com.example.thehumr.windrider.enums.State;
@@ -77,7 +78,7 @@ public class SegmentsLoadService extends IntentService {
             public void onResponse(Call<Segment> call, Response<Segment> response) {
                 if (response.body() != null) {
                     Segment downloadedSegment = response.body();
-                    downloadedSegment.save();
+                    SegmentDAO.saveWithReferences(downloadedSegment);
                     state = State.LOAD_SUCCESS;
                 } else {
                     state = State.LOAD_SUCCESS_EMPTY;

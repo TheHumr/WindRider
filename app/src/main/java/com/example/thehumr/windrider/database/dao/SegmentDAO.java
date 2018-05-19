@@ -14,4 +14,11 @@ public class SegmentDAO {
     public static List<Segment> getAllStarredSegment() {
         return SQLite.select().from(Segment.class).queryList();
     }
+
+    public static void saveWithReferences(Segment segment) {
+        if (segment.getMap() != null) {
+            segment.getMap().save();
+        }
+        segment.save();
+    }
 }

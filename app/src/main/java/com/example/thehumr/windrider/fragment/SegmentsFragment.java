@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,8 @@ import com.example.thehumr.windrider.R;
 import com.example.thehumr.windrider.database.dao.SegmentDAO;
 import com.example.thehumr.windrider.database.table.Segment;
 import com.example.thehumr.windrider.event.SegmentLoadEvent;
+import com.example.thehumr.windrider.utils.EvaluationUtils;
+import com.example.thehumr.windrider.utils.StringUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -25,6 +28,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SegmentsFragment extends android.support.v4.app.Fragment {
+
+    public static final double WIND_ANGLE = 270;
 
     SegmentAdapter adapter;
 
@@ -99,6 +104,11 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
             Segment segment = segments.get(position);
 
             holder.nameTextView.setText(segment.getName());
+            holder.locationTextView.setText(segment.getLocation());
+            holder.distanceTextView.setText(StringUtils.formatDistanceKm(segment.getDistance()));
+            holder.elevationGainTextView.setText(StringUtils.formatDistance(segment.getTotalElevationGain()));
+            holder.averageGradeTextView.setText(StringUtils.formatGrade(segment.getAverageGrade()));
+            EvaluationUtils.setupEvaluationImageView(getActivity(), holder.arrowImageView, segment.getMap().getAngle(), WIND_ANGLE);
 
         }
 
@@ -111,6 +121,18 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
 
             @BindView(R.id.nameTextView)
             TextView nameTextView;
+            @BindView(R.id.locationTextView)
+            TextView locationTextView;
+            @BindView(R.id.distanceTextView)
+            TextView distanceTextView;
+            @BindView(R.id.elevationGainTextView)
+            TextView elevationGainTextView;
+            @BindView(R.id.averageGradeTextView)
+            TextView averageGradeTextView;
+            @BindView(R.id.rankTextView)
+            TextView rankTextView;
+            @BindView(R.id.arrowImageView)
+            ImageView arrowImageView;
 
             public ItemViewHolder(View itemView) {
                 super(itemView);

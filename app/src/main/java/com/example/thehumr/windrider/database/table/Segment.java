@@ -2,6 +2,7 @@ package com.example.thehumr.windrider.database.table;
 
 import com.example.thehumr.windrider.database.MyDatabase;
 import com.google.gson.annotations.SerializedName;
+import com.google.maps.android.PolyUtil;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -70,6 +71,10 @@ public class Segment extends BaseModel {
 
 
     public Segment() {
+    }
+
+    public String getLocation() {
+        return String.format("%s, %s", city, country);
     }
 
     public int getId() {
@@ -185,6 +190,9 @@ public class Segment extends BaseModel {
     }
 
     public Map getMap() {
+        if (map == null) {
+
+        }
         return map;
     }
 
