@@ -13,7 +13,9 @@ import android.widget.Toast;
 
 import com.example.thehumr.windrider.R;
 import com.example.thehumr.windrider.database.dao.SegmentDAO;
+import com.example.thehumr.windrider.database.table.Map;
 import com.example.thehumr.windrider.database.table.Segment;
+import com.example.thehumr.windrider.database.table.Weather;
 import com.example.thehumr.windrider.event.SegmentLoadEvent;
 import com.example.thehumr.windrider.utils.EvaluationUtils;
 import com.example.thehumr.windrider.utils.StringUtils;
@@ -108,7 +110,18 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
             holder.distanceTextView.setText(StringUtils.formatDistanceKm(segment.getDistance()));
             holder.elevationGainTextView.setText(StringUtils.formatDistance(segment.getTotalElevationGain()));
             holder.averageGradeTextView.setText(StringUtils.formatGrade(segment.getAverageGrade()));
-            EvaluationUtils.setupEvaluationImageView(getActivity(), holder.arrowImageView, segment.getMap().getAngle(), WIND_ANGLE);
+
+            Map map = segment.getMap();
+            double segmentAngle = 0;
+            if (map != null) {
+                segmentAngle = map.getAngle();
+            }
+            Weather weather = segment.getWeather();
+            double windAngle = 0;
+            if (weather != null) {
+                windAngle = weather.getWeathers().get(0).getWind().getDegree();
+            }
+            EvaluationUtils.setupEvaluationImageView(getActivity(), holder.arrowImageView, segmentAngle, windAngle);
 
         }
 

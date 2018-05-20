@@ -66,8 +66,8 @@ public class Segment extends BaseModel {
     @Column
     int effortCount;
 
-    @Column
-    String points;
+    @ForeignKey
+    Weather weather;
 
 
     public Segment() {
@@ -232,12 +232,12 @@ public class Segment extends BaseModel {
         this.effortCount = effortCount;
     }
 
-    public String getPoints() {
-        return points;
+    public Weather getWeather() {
+        return weather;
     }
 
-    public void setPoints(String points) {
-        this.points = points;
+    public void setWeather(Weather weather) {
+        this.weather = weather;
     }
 
     public class AthleteSegmentStats {

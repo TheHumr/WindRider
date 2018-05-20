@@ -1,6 +1,5 @@
 package com.example.thehumr.windrider.network;
 
-import com.example.thehumr.windrider.database.dto.SegmentContainer;
 import com.example.thehumr.windrider.database.table.Segment;
 
 import java.util.List;
@@ -18,8 +17,9 @@ import static com.example.thehumr.windrider.network.RestClient.ACCESS_TOKEN;
 
 public interface StravaService {
 
-    public static final String ENDPOINT_segment = "segments";
-    public static final String ENDPOINT_starredSegments = "segments/starred";
+    String ENDPOINT_segment = "segments";
+
+    String ENDPOINT_starredSegments = "segments/starred";
 
     @GET(ENDPOINT_segment + "/{id}")
     Call<Segment> getSegment(@Path(value = "id") int id, @Query(ACCESS_TOKEN) String token);

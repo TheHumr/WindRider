@@ -11,28 +11,52 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitInstance {
 
-    private static Retrofit retrofit;
-    private static final String BASE_URL = "https://www.strava.com/api/v3/";
+    private static Retrofit retrofitStrava;
+    private static Retrofit retrofitWeather;
+    public static final String BASE_URL_STRAVA = "https://www.strava.com/api/v3/";
+    public static final String BASE_URL_OPEN_WEATHER_MAP = "https://api.openweathermap.org/data/2.5/";
 
-    public static Retrofit getRetrofitInstance() {
+    public static Retrofit getRetrofitInstanceStrava() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-// set your desired log level
+        // set your desired log level
         logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-// add your other interceptors …
+        // add your other interceptors …
 
-// add logging as last interceptor
+        // add logging as last interceptor
         httpClient.addNetworkInterceptor(logging);
         httpClient.addInterceptor(logging);  // <-- this is the important line!
 
-        if (retrofit == null) {
-            retrofit = new retrofit2.Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+        if (retrofitStrava == null) {
+            retrofitStrava = new retrofit2.Retrofit.Builder()
+                    .baseUrl(BASE_URL_STRAVA)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(httpClient.build())
                     .build();
         }
-        return retrofit;
+        return retrofitStrava;
+    }
+
+    public static Retrofit getRetrofitInstanceWeather() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        // set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        // add your other interceptors …
+
+        // add logging as last interceptor
+        httpClient.addNetworkInterceptor(logging);
+        httpClient.addInterceptor(logging);  // <-- this is the important line!
+
+        if (retrofitWeather == null) {
+            retrofitWeather = new retrofit2.Retrofit.Builder()
+                    .baseUrl(BASE_URL_OPEN_WEATHER_MAP)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(httpClient.build())
+                    .build();
+        }
+        return retrofitWeather;
     }
 }

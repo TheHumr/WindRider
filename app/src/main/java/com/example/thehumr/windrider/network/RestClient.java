@@ -1,7 +1,5 @@
 package com.example.thehumr.windrider.network;
 
-import retrofit2.Retrofit;
-
 /**
  * Created by ondraboura on 17/05/2018.
  */
@@ -14,11 +12,18 @@ public class RestClient {
 
     private StravaService stravaService;
 
+    private WeatherService weatherService;
+
     public static StravaService getStravaService() {
         return instance.stravaService;
     }
 
+    public static WeatherService getWeatherService() {
+        return instance.weatherService;
+    }
+
     public RestClient() {
-        stravaService = RetrofitInstance.getRetrofitInstance().create(StravaService.class);
+        stravaService = RetrofitInstance.getRetrofitInstanceStrava().create(StravaService.class);
+        weatherService = RetrofitInstance.getRetrofitInstanceWeather().create(WeatherService.class);
     }
 }

@@ -19,6 +19,9 @@ public class SegmentDAO {
         if (segment.getMap() != null) {
             segment.getMap().save();
         }
+        if (segment.getWeather() != null) {
+            segment.getWeather().save();
+        }
         segment.save();
     }
 }
