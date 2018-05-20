@@ -26,18 +26,18 @@ public class EvaluationUtils {
             relativeAngle = 360 + relativeAngle;
         }
 
-        if (360 - relativeAngle > EVALUATION_GRADE_5 || relativeAngle < EVALUATION_GRADE_5) {
-            imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_1));
-        } else if (360 - relativeAngle > EVALUATION_GRADE_4 || relativeAngle < EVALUATION_GRADE_4) {
-            imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_2));
-        } else if (360 - relativeAngle > EVALUATION_GRADE_3 || relativeAngle < EVALUATION_GRADE_3) {
-            imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_3));
-        } else if (360 - relativeAngle > EVALUATION_GRADE_2 || relativeAngle < EVALUATION_GRADE_2) {
-            imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_4));
-        } else if (360 - relativeAngle > EVALUATION_GRADE_1 || relativeAngle < EVALUATION_GRADE_1) {
-            imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_5));
-        } else {
+        if (relativeAngle > 360 - EVALUATION_GRADE_1 || relativeAngle < EVALUATION_GRADE_1) {
             imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_6));
+        } else if (relativeAngle > 360 - EVALUATION_GRADE_2 || relativeAngle < EVALUATION_GRADE_2) {
+            imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_5));
+        } else if (relativeAngle > 360 - EVALUATION_GRADE_3 || relativeAngle < EVALUATION_GRADE_3) {
+            imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_4));
+        } else if (relativeAngle > 360 - EVALUATION_GRADE_4 || relativeAngle < EVALUATION_GRADE_4) {
+            imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_3));
+        } else if (relativeAngle > 360 - EVALUATION_GRADE_5 || relativeAngle < EVALUATION_GRADE_5) {
+            imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_2));
+        } else {
+            imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_1));
         }
 
         imageView.setRotation((float) relativeAngle + 180);

@@ -7,7 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,10 +29,16 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import devs.mulham.horizontalcalendar.HorizontalCalendar;
+import devs.mulham.horizontalcalendar.HorizontalCalendarView;
+import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 public class SegmentsFragment extends android.support.v4.app.Fragment {
 
@@ -37,8 +48,18 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.calendarView)
+    HorizontalCalendarView calendarView;
+    @BindView(R.id.settingsPanel)
+    LinearLayout settingsPanel;
+    @BindView(R.id.settingsPanelImageView)
+    ImageView settingsPanelImageView;
 
     List<Segment> segments;
+    HorizontalCalendar horizontalCalendar;
+
+    private boolean settingsPanelShown = true;
+    private int day = 0;
 
     public SegmentsFragment() {
         // Required empty public constructor
@@ -77,6 +98,7 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_segments, container, false);
 
         ButterKnife.bind(this, view);
+
         return view;
     }
 
@@ -90,6 +112,46 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
+        setupCalendar();
+    }
+
+    private void setupCalendar() {
+        Calendar startDate = Calendar.getInstance();
+
+        /* ends after 1 month from now */
+        Calendar endDate = Calendar.getInstance();
+        endDate.add(Calendar.DATE, 5);
+        horizontalCalendar = new HorizontalCalendar.Builder(getActivity(), calendarView.getId())
+                .range(startDate, endDate)
+                .datesNumberOnScreen(5)
+                .build();
+        horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
+            @Override
+            public void onDateSelected(Calendar date, int position) {
+                day = position - 2;
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    @OnClick(R.id.settingsPanelImageView)
+    public void onSettingsImageViewClicked() {
+        if (settingsPanelShown) {
+            settingsPanelImageView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_keyboard_arrow_down));
+            Animation bottomDown = AnimationUtils.loadAnimation(getContext(),
+                    R.anim.bottom_down);
+            bottomDown.setFillEnabled(true);
+            bottomDown.setFillAfter(true);
+            settingsPanel.startAnimation(bottomDown);
+        } else {
+            settingsPanelImageView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_keyboard_arrow_up));
+            Animation bottomUp = AnimationUtils.loadAnimation(getContext(),
+                    R.anim.bottom_up);
+            bottomUp.setFillEnabled(true);
+            bottomUp.setFillAfter(true);
+            settingsPanel.startAnimation(bottomUp);
+        }
+        settingsPanelShown = !settingsPanelShown;
     }
 
     class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.ItemViewHolder> {
@@ -119,7 +181,7 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
             Weather weather = segment.getWeather();
             double windAngle = 0;
             if (weather != null) {
-                windAngle = weather.getWeathers().get(0).getWind().getDegree();
+                windAngle = weather.getWeathers().get(day * 7).getWind().getDegree();
             }
             EvaluationUtils.setupEvaluationImageView(getActivity(), holder.arrowImageView, segmentAngle, windAngle);
 
