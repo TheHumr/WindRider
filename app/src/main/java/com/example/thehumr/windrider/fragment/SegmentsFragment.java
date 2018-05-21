@@ -1,7 +1,9 @@
 package com.example.thehumr.windrider.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,11 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thehumr.windrider.R;
+import com.example.thehumr.windrider.activity.MainActivity;
+import com.example.thehumr.windrider.activity.SegmentDetailActivity;
 import com.example.thehumr.windrider.database.dao.SegmentDAO;
 import com.example.thehumr.windrider.database.table.Map;
 import com.example.thehumr.windrider.database.table.Segment;
 import com.example.thehumr.windrider.database.table.Weather;
 import com.example.thehumr.windrider.event.SegmentLoadEvent;
+import com.example.thehumr.windrider.service.SegmentsLoadService;
 import com.example.thehumr.windrider.utils.EvaluationUtils;
 import com.example.thehumr.windrider.utils.StringUtils;
 
@@ -134,6 +139,16 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
         });
     }
 
+    @OnClick(R.id.fab)
+    public void onFabClick() {
+        getMySegments();
+    }
+
+    public void getMySegments() {
+        Intent intent = new Intent(getActivity(), SegmentsLoadService.class);
+        getActivity().startService(intent);
+    }
+
     @OnClick(R.id.settingsPanelImageView)
     public void onSettingsImageViewClicked() {
         if (settingsPanelShown) {
@@ -158,7 +173,15 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
 
         @Override
         public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_segment, parent, false);
+            final View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_segment, parent, false);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Segment segment = segments.get(recyclerView.getChildLayoutPosition(itemView));
+                    Intent intent = new Intent(getActivity(), SegmentDetailActivity.class);
+                    startActivity(intent);
+                }
+            });
             return new ItemViewHolder(itemView);
         }
 
@@ -216,10 +239,8 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void onClick(View view) {
-
             }
         }
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
