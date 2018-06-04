@@ -47,6 +47,7 @@ import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 public class SegmentsFragment extends android.support.v4.app.Fragment {
 
+    public static final String ARG_ITEM_ID = "ARG_ITEM_ID";
     public static final double WIND_ANGLE = 270;
 
     SegmentAdapter adapter;
@@ -179,6 +180,7 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
                 public void onClick(View view) {
                     Segment segment = segments.get(recyclerView.getChildLayoutPosition(itemView));
                     Intent intent = new Intent(getActivity(), SegmentDetailActivity.class);
+                    intent.putExtra(ARG_ITEM_ID, segment.getId());
                     startActivity(intent);
                 }
             });
@@ -195,6 +197,8 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
             holder.distanceTextView.setText(StringUtils.formatDistanceKm(segment.getDistance()));
             holder.elevationGainTextView.setText(StringUtils.formatDistance(segment.getTotalElevationGain()));
             holder.averageGradeTextView.setText(StringUtils.formatGrade(segment.getAverageGrade()));
+
+            holder.rankTextView.setText(StringUtils.df2.format(segment.getEvaluation()));
 
             Map map = segment.getMap();
             double segmentAngle = 0;

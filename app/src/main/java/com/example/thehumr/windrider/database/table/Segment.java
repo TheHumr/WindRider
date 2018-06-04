@@ -1,6 +1,7 @@
 package com.example.thehumr.windrider.database.table;
 
 import com.example.thehumr.windrider.database.MyDatabase;
+import com.example.thehumr.windrider.utils.EvaluationUtils;
 import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.PolyUtil;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -71,6 +72,10 @@ public class Segment extends BaseModel {
 
 
     public Segment() {
+    }
+
+    public double getEvaluation() {
+        return EvaluationUtils.calculateEvaluatedCoef(map.getAngles(), 30, weather.getWeathers().get(0).getWind().getDegree(), 18);
     }
 
     public String getLocation() {

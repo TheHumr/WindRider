@@ -13,7 +13,7 @@ public class StringUtils {
     public static final Locale CZ_LOCALE = new Locale("cs", "CZ");
 
     public static final DecimalFormat integerFormat = (DecimalFormat) NumberFormat.getIntegerInstance(CZ_LOCALE);
-    private static DecimalFormat df2 = new DecimalFormat(".#");
+    public static DecimalFormat df2 = new DecimalFormat(".#");
 
     public static String formatDistance(double distance) {
         return integerFormat.format(distance) + "m";

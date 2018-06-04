@@ -85,4 +85,31 @@ public class Map extends BaseModel {
         }
         return angles;
     }
+
+    public double[] getBorders() {
+        double left = 0;
+        double top = 0;
+        double right = 0;
+        double bottom = 0;
+        for (LatLng latLng : getCoordinates()) {
+            if (latLng.latitude > top || top == 0) {
+                top = latLng.latitude;
+            }
+            if (latLng.latitude < bottom || bottom == 0) {
+                bottom = latLng.latitude;
+            }
+            if (latLng.longitude > right || right == 0) {
+                right = latLng.longitude;
+            }
+            if (latLng.longitude < left || left == 0) {
+                left = latLng.longitude;
+            }
+        }
+        return new double[]{left, top, right, bottom};
+    }
+
+    public LatLng getCentreCoordinate() {
+        double[] borders = getBorders();
+        return new LatLng((borders[1] + borders[3]) / 2, (borders[0] + borders[2]) / 2);
+    }
 }
