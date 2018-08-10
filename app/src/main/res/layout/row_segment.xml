@@ -68,24 +68,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/rankTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
             </LinearLayout>
 
         </LinearLayout>
 
         <FrameLayout
-            android:layout_width="50dp"
-            android:layout_height="wrap_content">
+            android:layout_width="60dp"
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/arrowImageView"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_gravity="top|end"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/ic_arrow_1" />
+
+            <TextView
+                android:id="@+id/rankTextView"
+                android:textSize="20dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
         </FrameLayout>
 

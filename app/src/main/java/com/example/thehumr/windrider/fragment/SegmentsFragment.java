@@ -1,25 +1,23 @@
 package com.example.thehumr.windrider.fragment;
 
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.thehumr.windrider.R;
-import com.example.thehumr.windrider.activity.MainActivity;
 import com.example.thehumr.windrider.activity.SegmentDetailActivity;
 import com.example.thehumr.windrider.database.dao.SegmentDAO;
 import com.example.thehumr.windrider.database.table.Map;
@@ -35,7 +33,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -65,7 +66,8 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
     HorizontalCalendar horizontalCalendar;
 
     private boolean settingsPanelShown = true;
-    private int day = 0;
+
+    private Calendar calendarDate;
 
     public SegmentsFragment() {
         // Required empty public constructor
@@ -112,6 +114,9 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        calendarDate = new GregorianCalendar();
+        calendarDate.setTime(new Date());
+
         loadSegments();
 
         adapter = new SegmentAdapter();
@@ -134,8 +139,37 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
         horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
             @Override
             public void onDateSelected(Calendar date, int position) {
-                day = position - 2;
+                calendarDate.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), calendarDate.get(Calendar.HOUR_OF_DAY), calendarDate.get(Calendar.MINUTE));
+                openTimePicker();
+            }
+        });
+    }
+
+    private void openTimePicker() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                calendarDate.set(calendarDate.get(Calendar.YEAR), calendarDate.get(Calendar.MONTH), calendarDate.get(Calendar.DAY_OF_MONTH), hour, minute);
+                sortItems();
                 adapter.notifyDataSetChanged();
+            }
+        }, calendarDate.get(Calendar.HOUR_OF_DAY), calendarDate.get(Calendar.MINUTE), true);
+        timePickerDialog.show();
+    }
+
+    private void sortItems() {
+        final long dateLong = calendarDate.getTimeInMillis();
+        for (Segment segment : segments) {
+            segment.calculateEvaluation(dateLong);
+        }
+        Collections.sort(segments, new Comparator<Segment>() {
+            @Override
+            public int compare(Segment s1, Segment s2) {
+                if (s1.getEvaluation(dateLong) <= s2.getEvaluation(dateLong)) {
+                    return -1;
+                } else {
+                    return 1;
+                }
             }
         });
     }
@@ -198,7 +232,16 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
             holder.elevationGainTextView.setText(StringUtils.formatDistance(segment.getTotalElevationGain()));
             holder.averageGradeTextView.setText(StringUtils.formatGrade(segment.getAverageGrade()));
 
-            holder.rankTextView.setText(StringUtils.df2.format(segment.getEvaluation()));
+            double evaluation = segment.getEvaluation(calendarDate.getTimeInMillis());
+            String prefix;
+            if (evaluation >= 1){
+                prefix = "-";
+            } else {
+                prefix = "+";
+            }
+
+            holder.rankTextView.setText(prefix + String.valueOf((int)(Math.abs(evaluation - 1) * 100)) + "%");
+            holder.rankTextView.setTextColor(EvaluationUtils.getEvaluatedColor(getActivity(), evaluation));
 
             Map map = segment.getMap();
             double segmentAngle = 0;
@@ -208,9 +251,10 @@ public class SegmentsFragment extends android.support.v4.app.Fragment {
             Weather weather = segment.getWeather();
             double windAngle = 0;
             if (weather != null) {
-                windAngle = weather.getWeathers().get(day * 7).getWind().getDegree();
+                windAngle = weather.getWindByTime(calendarDate.getTimeInMillis()).getDegree();
             }
-            EvaluationUtils.setupEvaluationImageView(getActivity(), holder.arrowImageView, segmentAngle, windAngle);
+            EvaluationUtils.setupEvaluationImageView(getActivity(), holder.arrowImageView, evaluation);
+            holder.arrowImageView.setRotation((float) EvaluationUtils.getRelativeWindAngle(segmentAngle, windAngle) + 180);
 
         }
 

@@ -8,8 +8,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class WeatherInTime {
 
-    @SerializedName("dt_txt")
-    String date;
+    @SerializedName("dt")
+    long dateLong;
     @SerializedName("wind")
     Wind wind;
 
@@ -37,8 +37,8 @@ public class WeatherInTime {
         }
     }
 
-    public String getDate() {
-        return date;
+    public long getDateLong() {
+        return dateLong;
     }
 
     public Wind getWind() {

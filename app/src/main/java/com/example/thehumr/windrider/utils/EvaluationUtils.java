@@ -19,24 +19,20 @@ public class EvaluationUtils {
     public static final int EVALUATION_GRADE_4 = 120;
     public static final int EVALUATION_GRADE_5 = 150;
 
-    public static void setupEvaluationImageView(Context context, ImageView imageView, double rideAngle, double windAngle) {
-        double relativeAngle = getRelativeWindAngle(rideAngle, windAngle);
-
-        if (relativeAngle > 360 - EVALUATION_GRADE_1 || relativeAngle < EVALUATION_GRADE_1) {
+    public static void setupEvaluationImageView(Context context, ImageView imageView, double evaluation) {
+        if (evaluation > 1.3) {
             imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_6));
-        } else if (relativeAngle > 360 - EVALUATION_GRADE_2 || relativeAngle < EVALUATION_GRADE_2) {
+        } else if (evaluation > 1.15) {
             imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_5));
-        } else if (relativeAngle > 360 - EVALUATION_GRADE_3 || relativeAngle < EVALUATION_GRADE_3) {
+        } else if (evaluation > 1) {
             imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_4));
-        } else if (relativeAngle > 360 - EVALUATION_GRADE_4 || relativeAngle < EVALUATION_GRADE_4) {
+        } else if (evaluation > 0.85) {
             imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_3));
-        } else if (relativeAngle > 360 - EVALUATION_GRADE_5 || relativeAngle < EVALUATION_GRADE_5) {
+        } else if (evaluation > 0.7) {
             imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_2));
         } else {
             imageView.setImageDrawable(context.getDrawable(R.drawable.ic_arrow_1));
         }
-
-        imageView.setRotation((float) relativeAngle + 180);
     }
 
     public static int getEvaluatedColor(Context context, double rideAngle, double windAngle) {
@@ -51,6 +47,23 @@ public class EvaluationUtils {
         } else if (relativeAngle > 360 - EVALUATION_GRADE_4 || relativeAngle < EVALUATION_GRADE_4) {
             return context.getColor(R.color.evaluation_3);
         } else if (relativeAngle > 360 - EVALUATION_GRADE_5 || relativeAngle < EVALUATION_GRADE_5) {
+            return context.getColor(R.color.evaluation_2);
+        } else {
+            return context.getColor(R.color.evaluation_1);
+        }
+    }
+
+    public static int getEvaluatedColor(Context context, double evaluation) {
+
+        if (evaluation > 1.3) {
+            return context.getColor(R.color.evaluation_6);
+        } else if (evaluation > 1.15) {
+            return context.getColor(R.color.evaluation_5);
+        } else if (evaluation > 1) {
+            return context.getColor(R.color.evaluation_4);
+        } else if (evaluation > 0.85) {
+            return context.getColor(R.color.evaluation_3);
+        } else if (evaluation > 0.7) {
             return context.getColor(R.color.evaluation_2);
         } else {
             return context.getColor(R.color.evaluation_1);

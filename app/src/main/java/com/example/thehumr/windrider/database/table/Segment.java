@@ -1,6 +1,7 @@
 package com.example.thehumr.windrider.database.table;
 
 import com.example.thehumr.windrider.database.MyDatabase;
+import com.example.thehumr.windrider.database.dto.WeatherInTime;
 import com.example.thehumr.windrider.utils.EvaluationUtils;
 import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.PolyUtil;
@@ -70,12 +71,27 @@ public class Segment extends BaseModel {
     @ForeignKey
     Weather weather;
 
+    private Double evaluation;
 
     public Segment() {
     }
 
-    public double getEvaluation() {
-        return EvaluationUtils.calculateEvaluatedCoef(map.getAngles(), 30, weather.getWeathers().get(0).getWind().getDegree(), 18);
+    public double getEvaluation(long dateLong) {
+        if (weather == null) {
+            return 1;
+        }
+        if (evaluation == null) {
+            calculateEvaluation(dateLong);
+        }
+        return evaluation;
+    }
+
+    public void calculateEvaluation(long dateLong) {
+        if (weather == null) {
+            return;
+        }
+        WeatherInTime.Wind wind = weather.getWindByTime(dateLong);
+        evaluation = EvaluationUtils.calculateEvaluatedCoef(map.getAngles(), 30, wind.getDegree(), wind.getSpeed());
     }
 
     public String getLocation() {

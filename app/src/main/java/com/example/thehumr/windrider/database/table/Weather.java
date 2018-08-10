@@ -62,6 +62,19 @@ public class Weather extends BaseModel {
         return weathers;
     }
 
+    public WeatherInTime.Wind getWindByTime(long dateLong) {
+        Long dateDiff = null;
+        WeatherInTime.Wind wind = null;
+        for (WeatherInTime weatherInTime : getWeathers()) {
+            long currentDiff = Math.abs(weatherInTime.getDateLong() * 1000 - dateLong);
+            if (dateDiff == null || currentDiff < dateDiff) {
+                dateDiff = currentDiff;
+                wind = weatherInTime.getWind();
+            }
+        }
+        return wind;
+    }
+
     public void setWeathers(List<WeatherInTime> weathers) {
         this.weathers = weathers;
     }

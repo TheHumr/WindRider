@@ -13,7 +13,8 @@ public class StringUtils {
     public static final Locale CZ_LOCALE = new Locale("cs", "CZ");
 
     public static final DecimalFormat integerFormat = (DecimalFormat) NumberFormat.getIntegerInstance(CZ_LOCALE);
-    public static DecimalFormat df2 = new DecimalFormat(".#");
+    public static DecimalFormat df1 = new DecimalFormat("#.#");
+    public static DecimalFormat df2 = new DecimalFormat("#.##");
 
     public static String formatDistance(double distance) {
         return integerFormat.format(distance) + "m";
@@ -21,10 +22,10 @@ public class StringUtils {
 
     public static String formatDistanceKm(double distance) {
         double distanceKm = distance / 1000;
-        return df2.format(distanceKm) + "km";
+        return df1.format(distanceKm) + "km";
     }
 
     public static String formatGrade(double grade) {
-        return df2.format(grade) + "%";
+        return df1.format(grade) + "%";
     }
 }
